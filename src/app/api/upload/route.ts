@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
-import path from "fs";
-import sharp from "sharp"; // المكتبة الجديدة
+import { existsSync } from "fs";
+import path from "path";
+import sharp from "sharp";
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,20 +18,20 @@ export async function POST(request: NextRequest) {
 
     // تحديد مجلد الحفظ داخل public/uploads
     const uploadDir = path.join(process.cwd(), "public", "uploads");
-    if (!path.existsSync(uploadDir)) {
+    if (!existsSync(uploadDir)) {
       await mkdir(uploadDir, { recursive: true });
     }
 
-    // إنشـاء اسم فريد للملف، وتغيير الامتداد لـ WebP
+    // إنشـاء اسم فريد للملف وتغيير الامتداد لـ webp
     const filename = `wall-${Date.now()}.webp`;
     const filePath = path.join(uploadDir, filename);
 
-    // 🚀🚀 هنا السحر: استقبال البافر، تحويله لـ WebP، وضغطه، ثم حفظه 🚀🚀
+    // ضغط الصورة وتحويلها لـ WebP
     await sharp(buffer)
-      .webp({ quality: 75 }) // جودة 75% ممتازة وبتقلل المساحة جداً
+      .webp({ quality: 75 })
       .toFile(filePath);
 
-    // إرجاع الرابط المباشر للصورة المضغوطة
+    // إرجاع الرابط المباشر للصورة
     const host = request.headers.get("host");
     const protocol = process.env.NODE_ENV === "production" ? "https" : "http";
     const imageUrl = `${protocol}://${host}/uploads/${filename}`;
