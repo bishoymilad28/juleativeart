@@ -9,10 +9,28 @@ const cairo = Cairo({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://juleativeart.com"),
   title: "جوليتيف أرت | لوحات جدارية مخصصة لمساحتك",
   description: "حوّل جدران منزلك أو مكتبك إلى تحفة فنية. اختر تصميمك، اعرضه على جدارك، ونحن ننفذه لك بأعلى جودة في الإمارات.",
-icons: {
+  icons: {
     icon: "/icon.png",
+    apple: "/icon.png",
+  },
+  openGraph: {
+    title: "جوليتيف أرت | لوحات جدارية مخصصة لمساحتك",
+    description: "حوّل جدران منزلك أو مكتبك إلى تحفة فنية. اختر تصميمك، اعرضه على جدارك، ونحن ننفذه لك بأعلى جودة في الإمارات.",
+    url: "https://juleativeart.com",
+    siteName: "Juleative Art",
+    images: [
+      {
+        url: "/icon.png",
+        width: 800,
+        height: 800,
+        alt: "Juleative Art Logo",
+      },
+    ],
+    locale: "ar_AE",
+    type: "website",
   },
 };
 
