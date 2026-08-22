@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { LanguageProvider } from "@/context/language-context";
 import { Navbar } from "@/components/navbar";
 import { Hero } from "@/components/hero";
 import { HowItWorks } from "@/components/how-it-works";
@@ -17,19 +16,17 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
-    <LanguageProvider>
-      <main className="min-h-screen bg-white">
-        <Navbar onOpenModal={() => setIsModalOpen(true)} />
-        <Hero onOpenModal={() => setIsModalOpen(true)} />
-        <HowItWorks />
-        <HandPaintedFeatures />
-        <WhyUs />
-        <Gallery onOpenModal={() => setIsModalOpen(true)} />
-        <SizeGuide />
-        <FAQ />
-        <Footer />
-        <UploadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
-      </main>
-    </LanguageProvider>
+    <main className="min-h-screen bg-white">
+      <Navbar onOpenModal={() => setIsModalOpen(true)} />
+      <Hero onOpenModal={() => setIsModalOpen(true)} />
+      <HowItWorks />
+      <HandPaintedFeatures />
+      <WhyUs />
+      <Gallery onOpenModal={() => setIsModalOpen(true)} />
+      <SizeGuide />
+      <FAQ />
+      <Footer />
+      <UploadModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+    </main>
   );
 }

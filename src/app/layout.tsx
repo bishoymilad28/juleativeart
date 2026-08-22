@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Cairo } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
@@ -32,7 +33,6 @@ export const metadata: Metadata = {
     icon: "/icon.png",
     apple: "/icon.png",
   },
-  // إعدادات الـ SEO المتعددة اللغات لمنع Duplicate Content
   alternates: {
     canonical: "https://juleativeart.com",
     languages: {
@@ -67,7 +67,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={cairo.variable}>
       <body className="font-sans antialiased bg-slate-50/50 text-foreground">
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
