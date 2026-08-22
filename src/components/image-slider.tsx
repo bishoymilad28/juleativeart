@@ -141,7 +141,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
               : "text-zinc-300 hover:text-white hover:bg-white/10"
           }`}
         >
-          قبل
+          بعد
         </button>
 
         <button
@@ -153,7 +153,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
               : "text-zinc-300 hover:text-white hover:bg-white/10"
           }`}
         >
-          بعد
+          قبل
         </button>
       </div>
 
