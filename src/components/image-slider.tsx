@@ -20,7 +20,11 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
     let position = (x / rect.width) * 100;
     if (position < 0) position = 0;
     if (position > 100) position = 100;
-    setSliderPosition(position);
+
+    // استخدام requestAnimationFrame لحركة أنعم على الشاشة
+    requestAnimationFrame(() => {
+      setSliderPosition(position);
+    });
   }, []);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
@@ -66,7 +70,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
         handleMove(e.touches[0].clientX);
       }}
     >
-      {/* صورة "قبل" (الحائط الفارغ كخلفية أساسية) */}
+      {/* صورة "قبل" (الخلفية) */}
       <Image
         src={beforeImage}
         alt="قبل إضافة اللوحة"
@@ -75,12 +79,12 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
         priority
       />
 
-      {/* صورة "بعد" (اللوحة معلقة - الطبقة المتحركة) */}
+      {/* صورة "بعد" (الطبقة المقصوصة حركياً) */}
       <div
-        className="absolute top-0 bottom-0 left-0 overflow-hidden transition-all duration-75 ease-out"
+        className="absolute top-0 bottom-0 left-0 overflow-hidden will-change-[width]"
         style={{ width: `${sliderPosition}%` }}
       >
-        <div className="relative w-full h-full min-w-[300px] sm:min-w-[600px]">
+        <div className="absolute inset-0 w-full h-full min-w-[100vw] sm:min-w-[700px]">
           <Image
             src={afterImage}
             alt="بعد إضافة اللوحة"
@@ -91,9 +95,9 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
         </div>
       </div>
 
-      {/* خط السلايدر */}
+      {/* خط السلايدر الفاصل */}
       <div
-        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 shadow-[0_0_12px_rgba(0,0,0,0.5)] transition-all duration-75 ease-out"
+        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 shadow-[0_0_12px_rgba(0,0,0,0.5)] will-change-[left]"
         style={{ left: `${sliderPosition}%` }}
       >
         <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-zinc-200 text-zinc-900 font-bold group-hover:scale-110 transition-transform">
@@ -103,7 +107,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
         </div>
       </div>
 
-      {/* أزرار قبل وبعد المظبوطة */}
+      {/* أزرار التنقل السريع (قبل / بعد) */}
       <div 
         dir="rtl"
         className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 p-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 shadow-xl"
