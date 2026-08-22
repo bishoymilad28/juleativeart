@@ -25,6 +25,9 @@ export const metadata: Metadata = {
     "Hand painted canvas Dubai",
     "Juleative Art",
   ],
+  verification: {
+    google: "4z9orUniwznL2weOGMLZzKabgBegyE5P4gh5klq5O2k",
+  },
   icons: {
     icon: "/icon.png",
     apple: "/icon.png",
