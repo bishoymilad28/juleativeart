@@ -11,7 +11,20 @@ interface ImageSliderProps {
 export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
+  const [containerWidth, setContainerWidth] = useState<number>(0);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  // تحديث عرض الحاوية عند التحميل وتغيير حجم الشاشة
+  useEffect(() => {
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.clientWidth);
+      }
+    };
+    updateWidth();
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
 
   const handleMove = useCallback((clientX: number) => {
     if (!containerRef.current) return;
@@ -27,7 +40,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
   }, []);
 
   const handleTouchMove = useCallback((e: TouchEvent) => {
-    if (e.cancelable) e.preventDefault(); // منع سحب الصفحة أثناء التلمس
+    if (e.cancelable) e.preventDefault();
     handleMove(e.touches[0].clientX);
   }, [handleMove]);
 
@@ -43,11 +56,6 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
     const container = containerRef.current;
     if (!container) return;
 
-    const onTouchStart = (e: TouchEvent) => {
-      setIsDragging(true);
-      handleMove(e.touches[0].clientX);
-    };
-
     if (isDragging) {
       window.addEventListener("mousemove", handleMouseMove);
       window.addEventListener("mouseup", handleEnd);
@@ -55,16 +63,13 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
       window.addEventListener("touchend", handleEnd);
     }
 
-    container.addEventListener("touchstart", onTouchStart, { passive: true });
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleEnd);
       window.removeEventListener("touchmove", handleTouchMove);
       window.removeEventListener("touchend", handleEnd);
-      container.removeEventListener("touchstart", onTouchStart);
     };
-  }, [isDragging, handleMouseMove, handleTouchMove, handleEnd, handleMove]);
+  }, [isDragging, handleMouseMove, handleTouchMove, handleEnd]);
 
   return (
     <div
@@ -74,6 +79,10 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
       onMouseDown={(e) => {
         setIsDragging(true);
         handleMove(e.clientX);
+      }}
+      onTouchStart={(e) => {
+        setIsDragging(true);
+        handleMove(e.touches[0].clientX);
       }}
     >
       {/* صورة "قبل" (الخلفية الأساسية) */}
@@ -87,10 +96,13 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
 
       {/* صورة "بعد" (الطبقة المقصوصة) */}
       <div
-        className="absolute top-0 bottom-0 left-0 overflow-hidden will-change-[width] pointer-events-none"
+        className="absolute top-0 bottom-0 left-0 overflow-hidden pointer-events-none"
         style={{ width: `${sliderPosition}%` }}
       >
-        <div className="absolute inset-0 w-full h-full min-w-[100vw] sm:min-w-[700px]">
+        <div 
+          className="absolute inset-0 h-full"
+          style={{ width: containerWidth ? `${containerWidth}px` : "100%" }}
+        >
           <Image
             src={afterImage}
             alt="بعد إضافة اللوحة"
@@ -103,7 +115,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
 
       {/* خط السلايدر الفاصل */}
       <div
-        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 shadow-[0_0_12px_rgba(0,0,0,0.5)] will-change-[left] pointer-events-none"
+        className="absolute top-0 bottom-0 w-1 bg-white cursor-ew-resize z-20 shadow-[0_0_12px_rgba(0,0,0,0.5)] pointer-events-none"
         style={{ left: `${sliderPosition}%` }}
       >
         <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-10 h-10 bg-white rounded-full flex items-center justify-center shadow-xl border-2 border-zinc-200 text-zinc-900 font-bold group-hover:scale-110 transition-transform">
@@ -117,7 +129,8 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
       <div 
         dir="rtl"
         className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 p-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 shadow-xl"
-        onClick={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
+        onTouchStart={(e) => e.stopPropagation()}
       >
         <button
           type="button"
