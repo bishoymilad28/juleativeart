@@ -100,8 +100,8 @@ export function Hero({ onOpenModal }: { onOpenModal?: () => void }) {
           {/* الجانب الأيسر: السلايدر التفاعلي */}
           <div className="lg:col-span-6 w-full">
             <ImageSlider
-              beforeImage="/new2.jpg"
-              afterImage="/new.jpg"
+              beforeImage="/hero-beforev2.jpg"
+              afterImage="/hero-afterv2.jpg"
             />
           </div>
 
