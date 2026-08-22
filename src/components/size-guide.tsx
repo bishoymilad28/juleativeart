@@ -4,25 +4,25 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Ruler } from "lucide-react";
 import { useLanguage } from "@/context/language-context";
 
-export function SizeGuide() {
+export function SizeGuide({ onOpenModal }: { onOpenModal?: () => void }) {
   const { lang, t } = useLanguage();
 
   const guidePointsAr = [
     {
-      title: "فوق الكنبة",
-      desc: "عرض اللوحة يكون بين 60% إلى 75% من عرض الكنبة، مع ترك مسافة 15 إلى 25 سم فوقها.",
+      title: "فوق الكنبة / القعدة",
+      desc: "عرض اللوحة يكون بين 60% إلى 75% من عرض الكنبة، مع ترك مسافة 15 إلى 25 سم فوقها بالضبط.",
     },
     {
       title: "غرفة النوم",
-      desc: "اللوحة تتوسط السرير بالضبط، وعرضها قريب من عرض الهيدبورد الخاص بالسرير.",
+      desc: "اللوحة تتوسط السرير، وعرضها قريب من عرض الهيدبورد الخاص بالسرير عشان يكتمل الديكور.",
     },
     {
       title: "طقم لوحات (مجموعة)",
-      desc: "اترك مسافة 5 إلى 8 سم بين كل برواز والثاني عشان تتناسق كقطعة واحدة.",
+      desc: "اترك مسافة بين 5 إلى 8 سم بين كل برواز والثاني عشان تطلع القطع متناسقة كأنها قطعة واحدة.",
     },
     {
       title: "مستوى الارتفاع",
-      desc: "منتصف اللوحة يكون على مستوى النظر (145 إلى 152 سم من الأرض).",
+      desc: "منتصف اللوحة يكون على مستوى النظر (حوالي 145 إلى 152 سم من أرضية المكان).",
     },
   ];
 
@@ -61,7 +61,9 @@ export function SizeGuide() {
             {t.sizeGuide.title}
           </h2>
           <p className="text-zinc-600 text-sm sm:text-base leading-relaxed">
-            {t.sizeGuide.subtitle}
+            {lang === "ar" 
+              ? "المقاس هو الأساس — اللوحة الصغيرة تضيع في الجدار الواسع، والكبيرة الزايدة تضايق المكان. هذي القواعد اللي نمشي عليها:"
+              : t.sizeGuide.subtitle}
           </p>
         </div>
 
@@ -84,28 +86,30 @@ export function SizeGuide() {
           ))}
         </div>
 
-        {/* كارت التصميم المخصص الأسود */}
+        {/* كارت التصميم المخصص الأسود بالصياغة الإماراتية */}
         <div className="bg-zinc-950 text-white rounded-3xl p-8 sm:p-12 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="absolute -right-10 -bottom-10 w-60 h-60 bg-[#E52328]/20 rounded-full blur-3xl pointer-events-none" />
           
           <div className={`max-w-2xl relative z-10 ${lang === "ar" ? "text-right" : "text-left"}`}>
             <h3 className="text-2xl sm:text-3xl font-black mb-3 text-white">
-              {t.sizeGuide.customTitle}
+              {lang === "ar" ? "عندك فكرة أو صورة في خاطرك؟" : t.sizeGuide.customTitle}
             </h3>
             <p className="text-zinc-400 text-sm sm:text-base leading-relaxed">
-              {t.sizeGuide.customDesc}
+              {lang === "ar"
+                ? "إذا ما حصلت التصميم اللي يدور في راسك، طرش لنا صورة المكان أو أي رسمة من Pinterest / Inspiration، وفالك طيب — بنضبط لك لوحة جدارية تفصيلية على ذوقك بالضبط."
+                : t.sizeGuide.customDesc}
             </p>
           </div>
 
           <button 
             type="button"
-            onClick={() => {
+            onClick={onOpenModal || (() => {
               const element = document.getElementById('hero');
               element?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            })}
             className="relative z-10 bg-[#E52328] hover:bg-red-700 text-white font-bold px-8 py-4 rounded-full text-sm sm:text-base transition-all shrink-0 shadow-lg shadow-red-600/20 cursor-pointer"
           >
-            {t.sizeGuide.customBtn}
+            {lang === "ar" ? "طلب رسم خاص" : t.sizeGuide.customBtn}
           </button>
         </div>
 
