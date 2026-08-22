@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { X, Camera, Send, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/context/language-context";
 
 interface ARCameraModalProps {
   isOpen: boolean;
@@ -14,6 +15,7 @@ interface ARCameraModalProps {
 }
 
 export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModalProps) {
+  const { lang, t } = useLanguage();
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [scale, setScale] = useState(1);
@@ -26,19 +28,18 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
   useEffect(() => {
     if (isOpen && !capturedImage) {
       navigator.mediaDevices
-        .getUserMedia({ video: { facingMode: "environment" } }) // الكاميرا الخلفية للموبايل
+        .getUserMedia({ video: { facingMode: "environment" } })
         .then((stream) => {
           if (videoRef.current) {
             videoRef.current.srcObject = stream;
           }
         })
         .catch((err) => {
-          console.error("تعذر الوصول للكاميرا:", err);
+          console.error("Camera access error:", err);
         });
     }
 
     return () => {
-      // إيقاف الكاميرا عند إغلاق النافذة
       if (videoRef.current && videoRef.current.srcObject) {
         const stream = videoRef.current.srcObject as MediaStream;
         stream.getTracks().forEach((track) => track.stop());
@@ -81,10 +82,8 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
     canvas.height = video.videoHeight || 480;
 
     if (ctx) {
-      // رسم خلفية الكاميرا
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
 
-      // رسم اللوحة فوق الكاميرا بالمقاس والمكان المحدد
       const img = new Image();
       img.src = selectedArtwork.imagePng;
       img.onload = () => {
@@ -101,17 +100,12 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
 
   // إرسال الصورة والطلب للواتساب مباشرة
   const sendToWhatsApp = async () => {
-    if (!capturedImage) {
-      alert("لا توجد صورة ملتقطة لإرسالها");
-      return;
-    }
+    if (!capturedImage) return;
 
     try {
-      // 1. تحويل صورة الكاميرا (base64) إلى ملف
       const blob = await (await fetch(capturedImage)).blob();
       const file = new File([blob], "ar-preview.jpg", { type: "image/jpeg" });
 
-      // 2. رفع الصورة إلى الـ API
       const formData = new FormData();
       formData.append("file", file);
 
@@ -121,30 +115,28 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
       });
 
       const data = await res.json();
+      if (!res.ok) throw new Error("Upload failed");
 
-      if (!res.ok) throw new Error("فشل رفع الصورة");
-
-      // 3. تجهيز النص شامل رابط المعاينة
       const whatsappNumber = "971586542399";
-      const text = `مرحباً Juleative Art 👋\nأرغب في الاستفسار عن اللوحة: *${selectedArtwork?.title || "لوحة جدارية"}*\n\n🖼️ رابط صورة المعاينة على الجدار:\n${data.imageUrl}`;
+      const text = lang === "ar" 
+        ? `مرحباً Juleative Art 👋\nأرغب في الاستفسار عن اللوحة: *${selectedArtwork?.title || "لوحة جدارية"}*\n\n🖼️ رابط صورة المعاينة على الجدار:\n${data.imageUrl}`
+        : `Hello Juleative Art 👋\nI would like to inquire about the artwork: *${selectedArtwork?.title || "Wall Canvas"}*\n\n🖼️ Wall preview link:\n${data.imageUrl}`;
 
-      // 4. فتح الواتساب
       window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(text)}`, "_blank");
       onClose();
 
     } catch (error) {
       console.error("Upload error:", error);
-      alert("حدث خطأ أثناء إرسال معاينة الكاميرا، يرجى المحاولة مرة أخرى.");
     }
   };
 
   return (
     <div className="fixed inset-0 z-[99999] bg-black/90 flex flex-col items-center justify-between p-4">
       {/* الترويسة الأفقية */}
-      <div className="w-full max-w-lg flex items-center justify-between text-white z-10 pt-2" dir="rtl">
+      <div className={`w-full max-w-lg flex items-center justify-between text-white z-10 pt-2 ${lang === "ar" ? "text-right" : "text-left"}`}>
         <div>
           <h3 className="font-bold text-sm sm:text-base">{selectedArtwork.title}</h3>
-          <p className="text-[11px] text-zinc-400">حرك اللوحة أو كبرها لتناسب جدارك</p>
+          <p className="text-[11px] text-zinc-400">{t.arModal.sub}</p>
         </div>
         <button
           onClick={onClose}
@@ -158,7 +150,6 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
       <div className="relative w-full max-w-lg aspect-[3/4] bg-zinc-950 rounded-3xl overflow-hidden my-auto shadow-2xl flex items-center justify-center">
         {!capturedImage ? (
           <>
-            {/* بث الكاميرا الحي */}
             <video
               ref={videoRef}
               autoPlay
@@ -166,7 +157,6 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
               className="absolute inset-0 w-full h-full object-cover"
             />
 
-            {/* اللوحة الشفافة الشاغرة (PNG) قابلة للتحريك والتكبير */}
             <div
               onMouseDown={handleMouseDown}
               onMouseMove={handleMouseMove}
@@ -189,12 +179,10 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
             </div>
           </>
         ) : (
-          /* المعاينة بعد التقاط الصورة */
           /* eslint-disable-next-line @next/next/no-img-element */
           <img src={capturedImage} alt="Captured Wall" className="w-full h-full object-cover" />
         )}
 
-        {/* الكانفس المخفي المخصص لالتقاط الصورة */}
         <canvas ref={canvasRef} className="hidden" />
       </div>
 
@@ -202,50 +190,44 @@ export function ARCameraModal({ isOpen, onClose, selectedArtwork }: ARCameraModa
       <div className="w-full max-w-lg bg-zinc-900/90 backdrop-blur-md p-4 rounded-2xl flex items-center justify-around gap-2 text-white z-10 border border-zinc-800">
         {!capturedImage ? (
           <>
-            {/* التكبير والتصغير */}
             <button
               onClick={() => setScale((prev) => Math.min(prev + 0.15, 2.5))}
-              className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700"
-              title="تكبير"
+              className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 cursor-pointer"
             >
               <ZoomIn className="w-5 h-5" />
             </button>
 
-            {/* زر صور جدارك الآن */}
             <Button
               onClick={captureWall}
-              className="bg-[#E52328] hover:bg-red-700 text-white font-bold px-6 py-6 rounded-full flex items-center gap-2 shadow-lg shadow-red-600/30"
+              className="bg-[#E52328] hover:bg-red-700 text-white font-bold px-6 py-6 rounded-full flex items-center gap-2 shadow-lg shadow-red-600/30 cursor-pointer"
             >
               <Camera className="w-5 h-5" />
-              <span>التقاط الصورة</span>
+              <span>{t.arModal.capture}</span>
             </Button>
 
             <button
               onClick={() => setScale((prev) => Math.max(prev - 0.15, 0.5))}
-              className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700"
-              title="تصغير"
+              className="p-3 rounded-full bg-zinc-800 hover:bg-zinc-700 cursor-pointer"
             >
               <ZoomOut className="w-5 h-5" />
             </button>
           </>
         ) : (
           <>
-            {/* لإعادة التقاط الصورة */}
             <Button
               onClick={() => setCapturedImage(null)}
-              className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-5 rounded-full flex items-center gap-2 text-xs"
+              className="bg-zinc-800 hover:bg-zinc-700 text-white font-bold px-4 py-5 rounded-full flex items-center gap-2 text-xs cursor-pointer"
             >
               <RotateCcw className="w-4 h-4" />
-              <span>إعادة التجربة</span>
+              <span>{t.arModal.retake}</span>
             </Button>
 
-            {/* إرسال للواتساب */}
             <Button
               onClick={sendToWhatsApp}
-              className="bg-[#E52328] hover:bg-red-700 text-white font-bold px-6 py-5 rounded-full flex items-center gap-2 text-xs shadow-lg shadow-red-600/30"
+              className="bg-[#E52328] hover:bg-red-700 text-white font-bold px-6 py-5 rounded-full flex items-center gap-2 text-xs shadow-lg shadow-red-600/30 cursor-pointer"
             >
-              <Send className="w-4 h-4 rotate-180" />
-              <span>إرسال الطلب للواتساب</span>
+              <Send className={`w-4 h-4 ${lang === "ar" ? "rotate-180" : ""}`} />
+              <span>{t.arModal.sendWhatsapp}</span>
             </Button>
           </>
         )}

@@ -2,31 +2,34 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Camera, Palette, Eye, Truck } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
 
 export function HowItWorks() {
+  const { lang, t } = useLanguage();
+
   const steps = [
     {
       step: "01",
-      title: "طرش صورة المكان",
-      description: "لقطة سريعة بالتلفون للمكان اللي حاب تزيّنه باللوحة.",
+      title: t.howItWorks.step1Title,
+      description: t.howItWorks.step1Desc,
       icon: Camera,
     },
     {
       step: "02",
-      title: "اختر التصميم والمقاس",
-      description: "بنختار اللوحة والمقاس المناسبين ونطرش لك تصور واقعي خلال أقل من ساعة.",
+      title: t.howItWorks.step2Title,
+      description: t.howItWorks.step2Desc,
       icon: Palette,
     },
     {
       step: "03",
-      title: "عاين اللوحة على جدارك",
-      description: "نطرش لك تصميم رقمي واقعي اطلب بس لما تعجبك النتيجة، بدون أي التزام.",
+      title: t.howItWorks.step3Title,
+      description: t.howItWorks.step3Desc,
       icon: Eye,
     },
     {
       step: "04",
-      title: "الرسم والتوصيل",
-      description: "يرسمها الفنّان بالإيد بأعلى جودة ونوصلها لين باب بيتك في الإمارات.",
+      title: t.howItWorks.step4Title,
+      description: t.howItWorks.step4Desc,
       icon: Truck,
     },
   ];
@@ -42,15 +45,15 @@ export function HowItWorks() {
         {/* العناوين */}
         <div className="text-center max-w-2xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl font-black text-white">
-            كيف نعمل؟ <span className="text-[#E52328]">4 خطوات بسيطة</span>
+            {t.howItWorks.title} <span className="text-[#E52328]">{t.howItWorks.titleHighlight}</span>
           </h2>
           <p className="mt-3 text-zinc-400 text-sm sm:text-base leading-relaxed">
-            تجربة سهلة ومخصصة بالكامل تضمن لك لوحة تفصيلية لبيتك بدون أي تكهنات.
+            {t.howItWorks.subtitle}
           </p>
         </div>
 
         {/* كروت الخطوات بالألوان الداكنة الفاخرة */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 text-right" dir="rtl">
+        <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 ${lang === "ar" ? "text-right" : "text-left"}`}>
           {steps.map((item, idx) => {
             const Icon = item.icon;
             return (

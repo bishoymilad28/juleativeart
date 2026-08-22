@@ -1,38 +1,41 @@
 "use client";
 
 import { Brush, Sparkles, ShieldCheck, Palette, Frame, HeartHandshake } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
 
 export function WhyUs() {
+  const { lang, t } = useLanguage();
+
   const features = [
     {
       icon: Brush,
-      title: "رسم يدوي 100% بفرشاة الفنان",
-      description: "كل لوحة هي قطعة فنية فريدة تُجيد رسمها أيدي فنانين محترفين باستخدام ألوان زيتية وأكريليك عالية الجودة.",
+      title: t.whyUs.feat1Title,
+      description: t.whyUs.feat1Desc,
     },
     {
       icon: Sparkles,
-      title: "خامات وأوراق ذهب فاخرة",
-      description: "نستخدم أوراق الذهب والفضة (Gold Leaf) مع معاجين البارز (Texture) لإعطاء عمق وملمس ملموس للجدار.",
+      title: t.whyUs.feat2Title,
+      description: t.whyUs.feat2Desc,
     },
     {
       icon: Frame,
-      title: "إطارات خشبية مخصصة",
-      description: "إطارات من خشب الجوز والسنديان الطبيعي المصممة خصيصاً لتناسب ديكور وأثاث مساحتك.",
+      title: t.whyUs.feat3Title,
+      description: t.whyUs.feat3Desc,
     },
     {
       icon: Palette,
-      title: "تعديل الألوان حسب طلبك",
-      description: "يمكننا تعديل درجات الألوان لتتناسب تماماً مع قماش الكنب، السجاد، أو لون طلاء جدران بيتك.",
+      title: t.whyUs.feat4Title,
+      description: t.whyUs.feat4Desc,
     },
     {
       icon: ShieldCheck,
-      title: "ضمان ثبات الألوان ومدى الحياة",
-      description: "طبقات حماية خاصة تحمي اللوحة من الرطوبة والأتربة وتضمن بقاء ألوانها زاهية لعشرات السنين.",
+      title: t.whyUs.feat5Title,
+      description: t.whyUs.feat5Desc,
     },
     {
       icon: HeartHandshake,
-      title: "معاينة حية وتعديل قبل الشحن",
-      description: "نرسل لك فيديو وصوراً للوحة بعد انتهاء رسمها وقبل تأطيرها لشحنها بعد موافقتك الكاملة.",
+      title: t.whyUs.feat6Title,
+      description: t.whyUs.feat6Desc,
     },
   ];
 
@@ -46,24 +49,24 @@ export function WhyUs() {
         {/* العنوان */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-[#E52328] font-bold text-sm tracking-widest uppercase mb-2 block">
-            سر القيمة والفخامة
+            {t.whyUs.badge}
           </span>
           <h2 className="text-3xl sm:text-5xl font-black text-white tracking-tight">
-            لماذا تختار <span className="text-[#E52328]">جوليتيف أرت</span> لمساحتك؟
+            {t.whyUs.title} <span className="text-[#E52328]">{t.whyUs.titleHighlight}</span> {t.whyUs.titleEnd}
           </h2>
           <p className="mt-4 text-zinc-400 text-base sm:text-lg">
-            نحن لا نبيع مجرد صور مطبوعة، بل نقدم تحفاً فنية مرسومة بيد فنان تعكس ذوقك الرفيع وتصنع فارقاً حقيقياً في بيتك.
+            {t.whyUs.subtitle}
           </p>
         </div>
 
         {/* الشبكة (Grid) */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${lang === "ar" ? "text-right" : "text-left"}`}>
           {features.map((item, index) => {
             const Icon = item.icon;
             return (
               <div 
                 key={index} 
-                className="p-8 rounded-2xl bg-zinc-800/50 border border-zinc-800 hover:border-red-600/50 transition-all duration-300 hover:-translate-y-1 text-right"
+                className="p-8 rounded-2xl bg-zinc-800/50 border border-zinc-800 hover:border-red-600/50 transition-all duration-300 hover:-translate-y-1"
               >
                 <div className="w-12 h-12 rounded-xl bg-red-950/50 border border-red-800/30 text-[#E52328] flex items-center justify-center mb-6">
                   <Icon className="w-6 h-6" />

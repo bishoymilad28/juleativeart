@@ -2,6 +2,7 @@
 
 import { useState, useRef, useCallback, useEffect } from "react";
 import Image from "next/image";
+import { useLanguage } from "@/context/language-context";
 
 interface ImageSliderProps {
   beforeImage: string;
@@ -9,6 +10,7 @@ interface ImageSliderProps {
 }
 
 export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
+  const { lang } = useLanguage();
   const [sliderPosition, setSliderPosition] = useState(50);
   const [isDragging, setIsDragging] = useState(false);
   const [containerWidth, setContainerWidth] = useState<number>(0);
@@ -88,7 +90,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
       {/* صورة "قبل" (الخلفية الأساسية) */}
       <Image
         src={beforeImage}
-        alt="قبل إضافة اللوحة"
+        alt={lang === "ar" ? "قبل إضافة اللوحة" : "Before adding artwork"}
         fill
         className="object-cover pointer-events-none"
         priority
@@ -105,7 +107,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
         >
           <Image
             src={afterImage}
-            alt="بعد إضافة اللوحة"
+            alt={lang === "ar" ? "بعد إضافة اللوحة" : "After adding artwork"}
             fill
             className="object-cover pointer-events-none"
             priority
@@ -127,7 +129,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
 
       {/* أزرار التنقل (قبل / بعد) */}
       <div 
-        dir="rtl"
+        dir="ltr"
         className="absolute bottom-4 left-1/2 -translate-x-1/2 z-30 flex items-center gap-1.5 p-1.5 bg-black/60 backdrop-blur-md rounded-full border border-white/20 shadow-xl"
         onMouseDown={(e) => e.stopPropagation()}
         onTouchStart={(e) => e.stopPropagation()}
@@ -141,7 +143,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
               : "text-zinc-300 hover:text-white hover:bg-white/10"
           }`}
         >
-          بعد
+          {lang === "ar" ? "بعد" : "After"}
         </button>
 
         <button
@@ -153,7 +155,7 @@ export function ImageSlider({ beforeImage, afterImage }: ImageSliderProps) {
               : "text-zinc-300 hover:text-white hover:bg-white/10"
           }`}
         >
-          قبل
+          {lang === "ar" ? "قبل" : "Before"}
         </button>
       </div>
 

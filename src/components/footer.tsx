@@ -3,14 +3,17 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail } from "lucide-react";
+import { useLanguage } from "@/context/language-context";
 
 export function Footer() {
+  const { lang, t } = useLanguage();
+
   return (
-    <footer className="bg-[#09090b] text-white pt-16 pb-8 border-t border-zinc-800/80" dir="rtl">
+    <footer className="bg-[#09090b] text-white pt-16 pb-8 border-t border-zinc-800/80">
       <div className="container mx-auto px-4 sm:px-8">
         
         {/* الأعمدة الرئيسية */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 text-right">
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 ${lang === "ar" ? "text-right" : "text-left"}`}>
           
           {/* العمود الأول: اللوجو والوصف */}
           <div className="space-y-4">
@@ -23,40 +26,40 @@ export function Footer() {
               priority
             />
             <p className="text-xs sm:text-sm text-zinc-400 leading-relaxed max-w-xs">
-              تحف جدارية مرسومة يدوياً بفرشاة الفنان وخامات فاخرة، مع خدمة المعاينة الرقمية الأولى في دولة الإمارات.
+              {t.footer.desc}
             </p>
           </div>
 
           {/* العمود الثاني: روابط سريعة */}
           <div>
-            <h4 className="font-bold text-white text-base mb-4">روابط سريعة</h4>
+            <h4 className="font-bold text-white text-base mb-4">{t.footer.quickLinks}</h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-400">
-              <li><Link href="/#hero" className="hover:text-[#E52328] transition-colors">الرئيسية</Link></li>
-              <li><Link href="/#how-it-works" className="hover:text-[#E52328] transition-colors">كيف نعمل</Link></li>
-              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">معرض اللوحات</Link></li>
-              <li><Link href="/#size-guide" className="hover:text-[#E52328] transition-colors">دليل المقاسات</Link></li>
-              <li><Link href="/#faq" className="hover:text-[#E52328] transition-colors">الأسئلة الشائعة</Link></li>
+              <li><Link href="/#hero" className="hover:text-[#E52328] transition-colors">{t.nav.home}</Link></li>
+              <li><Link href="/#how-it-works" className="hover:text-[#E52328] transition-colors">{t.nav.howItWorks}</Link></li>
+              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">{t.nav.gallery}</Link></li>
+              <li><Link href="/#size-guide" className="hover:text-[#E52328] transition-colors">{t.nav.sizeGuide}</Link></li>
+              <li><Link href="/#faq" className="hover:text-[#E52328] transition-colors">{t.nav.faq}</Link></li>
             </ul>
           </div>
 
           {/* العمود الثالث: التصنيفات */}
           <div>
-            <h4 className="font-bold text-white text-base mb-4">التصنيفات</h4>
+            <h4 className="font-bold text-white text-base mb-4">{t.footer.categories}</h4>
             <ul className="space-y-2.5 text-xs sm:text-sm text-zinc-400">
-              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">لوحات تجريدية (Abstract)</Link></li>
-              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">خط عربي وأوراق ذهب</Link></li>
-              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">لوحات كلاسيك ومودرن</Link></li>
-              <li><Link href="/#hero" className="hover:text-[#E52328] transition-colors">طلب رسم خاص</Link></li>
+              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">{t.gallery.abstract}</Link></li>
+              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">{t.gallery.calligraphy}</Link></li>
+              <li><Link href="/#gallery" className="hover:text-[#E52328] transition-colors">{t.gallery.modern}</Link></li>
+              <li><Link href="/#hero" className="hover:text-[#E52328] transition-colors">{lang === "ar" ? "طلب رسم خاص" : "Custom Artwork Order"}</Link></li>
             </ul>
           </div>
 
           {/* العمود الرابع: تواصل معنا */}
           <div>
-            <h4 className="font-bold text-white text-base mb-4">تواصل معنا</h4>
+            <h4 className="font-bold text-white text-base mb-4">{t.footer.contact}</h4>
             <ul className="space-y-3 text-xs sm:text-sm text-zinc-400">
               <li className="flex items-center gap-2.5 justify-start">
                 <MapPin className="w-4 h-4 text-[#E52328] shrink-0" />
-                <span>الإمارات العربية المتحدة</span>
+                <span>{t.footer.location}</span>
               </li>
               <li className="flex items-center gap-2.5 justify-start">
                 <Phone className="w-4 h-4 text-[#E52328] shrink-0" />
@@ -64,8 +67,8 @@ export function Footer() {
                   href="tel:+971586542399" 
                   className="hover:text-white"
                 >
-                  <span dir="ltr" className="inline-block text-left">
-                    {"\u200E"}+971 58 654 2399
+                  <span dir="ltr" className="inline-block">
+                    +971 58 654 2399
                   </span>
                 </a>
               </li>
@@ -83,17 +86,17 @@ export function Footer() {
         {/* الجزء السفلي والسياسات */}
         <div className="border-t border-zinc-800/80 pt-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-zinc-500">
           
-          <p>© 2026 JULEATIVE ART. جميع الحقوق محفوظة.</p>
+          <p>{t.footer.rights}</p>
 
           <div className="flex flex-wrap items-center justify-center gap-6 font-medium">
             <Link href="/privacy" className="hover:text-white transition-colors">
-              سياسة الخصوصية
+              {t.footer.privacy}
             </Link>
             <Link href="/terms" className="hover:text-white transition-colors">
-              شروط الاستخدام والطلب
+              {t.footer.terms}
             </Link>
             <Link href="/delivery" className="hover:text-white transition-colors">
-              التوصيل والتركيب
+              {t.footer.delivery}
             </Link>
           </div>
 
