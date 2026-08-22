@@ -4,20 +4,22 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sparkles, Camera } from "lucide-react";
 import { ARCameraModal } from "@/components/ar-camera-modal";
+import { useLanguage } from "@/context/language-context";
 
 export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
+  const { lang, t } = useLanguage();
   const [activeTab, setActiveTab] = useState("all");
   const [selectedArtwork, setSelectedArtwork] = useState<{ title: string; imagePng: string } | null>(null);
   const [isCameraOpen, setIsCameraOpen] = useState(false);
 
   const categories = [
-    { id: "all", label: "الكل" },
-    { id: "abstract", label:"(Abstract) تجريدي" },
-    { id: "calligraphy", label:"خط عربي واستئلالات" },
-    { id: "modern", label:"مودرن وعصري" },
+    { id: "all", label: t.gallery.all },
+    { id: "abstract", label: t.gallery.abstract },
+    { id: "calligraphy", label: t.gallery.calligraphy },
+    { id: "modern", label: t.gallery.modern },
   ];
 
-  const artworkList = [
+  const artworkListAr = [
     {
       id: 1,
       title: "عمق الليل والرخام الأزرق",
@@ -44,6 +46,35 @@ export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
     },
   ];
 
+  const artworkListEn = [
+    {
+      id: 1,
+      title: "Midnight Depth & Blue Marble",
+      category: "abstract",
+      categoryName: "Luxury Abstract",
+      imagePng: "/artwork11.png",
+      desc: "Rich navy blue tones with marble textures and raised gold leaf lines.",
+    },
+    {
+      id: 2,
+      title: "Golden Elegance & Burgundy",
+      category: "calligraphy",
+      categoryName: "Arabic Calligraphy",
+      imagePng: "/artwork22.png",
+      desc: "Luxurious blend of metallic gold leaf and heavy impasto canvas texture.",
+    },
+    {
+      id: 3,
+      title: "Desert Serenity & Nude Tones",
+      category: "modern",
+      categoryName: "Modern & Contemporary",
+      imagePng: "/artwork33.png",
+      desc: "Calming beige and off-white palette perfect for modern living rooms.",
+    },
+  ];
+
+  const artworkList = lang === "ar" ? artworkListAr : artworkListEn;
+
   const filteredArtworks =
     activeTab === "all"
       ? artworkList
@@ -56,19 +87,19 @@ export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
 
   return (
     <section id="gallery" className="py-20 bg-white border-b border-zinc-200/60 scroll-mt-20">
-      <div className="container mx-auto px-4 sm:px-8" dir="rtl">
+      <div className="container mx-auto px-4 sm:px-8">
         
         {/* الترويسة */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-          <div className="text-right">
+        <div className={`flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 ${lang === "ar" ? "text-right" : "text-left"}`}>
+          <div>
             <span className="text-[#E52328] font-bold text-xs sm:text-sm tracking-wide block mb-2">
-              تشكيلة مخصصة لبيتك
+              {t.gallery.badge}
             </span>
             <h2 className="text-3xl sm:text-4xl font-black text-zinc-900">
-              معرض اللوحات والأعمال الفنية
+              {t.gallery.title}
             </h2>
             <p className="mt-3 text-zinc-600 text-sm sm:text-base leading-relaxed max-w-xl">
-              اختر التصميم، وجرب رؤية اللوحة مباشرة على جدارك باستخدام الكاميرا.
+              {t.gallery.subtitle}
             </p>
           </div>
 
@@ -77,7 +108,7 @@ export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
             onClick={onOpenModal}
             className="bg-zinc-900 hover:bg-zinc-800 text-white font-bold rounded-full px-6 py-3 text-xs sm:text-sm flex items-center gap-2 shrink-0 cursor-pointer"
           >
-            <span>طلب تصميم مخصص جديد</span>
+            <span>{t.gallery.btnCustom}</span>
             <Sparkles className="w-4 h-4 text-[#E52328]" />
           </Button>
         </div>
@@ -111,13 +142,13 @@ export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
                     alt={item.title}
                     className="w-full h-full object-contain hover:scale-105 transition-transform duration-500"
                   />
-                  <span className="absolute top-3 right-3 bg-white/90 backdrop-blur-md text-zinc-900 font-bold text-[11px] px-3 py-1 rounded-full shadow-sm">
+                  <span className={`absolute top-3 ${lang === "ar" ? "right-3" : "left-3"} bg-white/90 backdrop-blur-md text-zinc-900 font-bold text-[11px] px-3 py-1 rounded-full shadow-sm`}>
                     {item.categoryName}
                   </span>
                 </div>
                 
-                <h3 className="font-bold text-zinc-900 text-lg mb-1 text-right">{item.title}</h3>
-                <p className="text-xs text-zinc-600 mb-4 text-right">{item.desc}</p>
+                <h3 className={`font-bold text-zinc-900 text-lg mb-1 ${lang === "ar" ? "text-right" : "text-left"}`}>{item.title}</h3>
+                <p className={`text-xs text-zinc-600 mb-4 ${lang === "ar" ? "text-right" : "text-left"}`}>{item.desc}</p>
               </div>
 
               {/* زر تجربة الكاميرا */}
@@ -127,7 +158,7 @@ export function Gallery({ onOpenModal }: { onOpenModal?: () => void }) {
                 className="w-full bg-[#E52328] hover:bg-red-700 text-white font-bold py-3 rounded-2xl text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md shadow-red-600/20 cursor-pointer"
               >
                 <Camera className="w-4 h-4" />
-                <span>جربها على جدارك بالكاميرا</span>
+                <span>{t.gallery.tryCamera}</span>
               </Button>
             </div>
           ))}

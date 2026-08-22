@@ -2,23 +2,26 @@
 
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
+import { useLanguage } from "@/context/language-context";
 
 export function HandPaintedFeatures() {
+  const { lang, t } = useLanguage();
+
   const features = [
     {
-      title: "الفنان يرسمها بإيده",
-      description: "كل لوحة تتنفذ بالفرشاة وسكين الرسم على قماش الكانفس، مب طباعة أبداً.",
-      image: "/pic1.jpg", // الصورة الأولى (الفنان واللوحة على الإستاند)
+      title: t.handPainted.feat1Title,
+      description: t.handPainted.feat1Desc,
+      image: "/pic1.jpg",
     },
     {
-      title: "ألوان تتخلط خصوص لك",
-      description: "نخلط ونضبط درجات الأحمر والأسود والذهب لتتناسق مع ديكور بيتك.",
-      image: "/pic2.jpg", // الصورة الثانية (باليتة الألوان)
+      title: t.handPainted.feat2Title,
+      description: t.handPainted.feat2Desc,
+      image: "/pic2.jpg",
     },
     {
-      title: "ملمس بارز لضربات الفرشاة",
-      description: "تقدر تحس بسماكة المعجون، ورق الذهب، وملمس الكانفس في اللوحة نفسها.",
-      image: "/pic3.jpg", // الصورة الثالثة (ملمس ضربات الفرشاة القريب)
+      title: t.handPainted.feat3Title,
+      description: t.handPainted.feat3Desc,
+      image: "/pic3.jpg",
     },
   ];
 
@@ -28,14 +31,14 @@ export function HandPaintedFeatures() {
         
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="text-3xl sm:text-4xl font-black text-zinc-900">
-            مرسومة بالإيد، <span className="text-[#E52328]">مب مطبوعة</span>
+            {t.handPainted.title} <span className="text-[#E52328]">{t.handPainted.titleHighlight}</span>
           </h2>
           <p className="mt-3 text-zinc-600 text-sm sm:text-base leading-relaxed">
-            الفرق بين اللوحة الجدارية الرسم والتابلوه المطبوع يبين في التفاصيل — في ملمس ضربات الفرشاة، وبريق أوراق الذهب، وفي إن ما شي قطعتين طالعين بنفس الشكل بالضبط.
+            {t.handPainted.desc}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-right" dir="rtl">
+        <div className={`grid grid-cols-1 md:grid-cols-3 gap-8 ${lang === "ar" ? "text-right" : "text-left"}`}>
           {features.map((item, idx) => (
             <Card key={idx} className="border-zinc-200/80 bg-slate-50/50 rounded-3xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
               <CardContent className="p-0">
