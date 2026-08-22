@@ -1,29 +1,20 @@
 "use client";
 
-import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Camera, Globe } from "lucide-react";
-import { translations } from "@/data/translations";
+import { useLanguage } from "@/context/language-context";
 
 export function Navbar({ onOpenModal }: { onOpenModal?: () => void }) {
-  const [lang, setLang] = useState<"ar" | "en">("ar");
-  const t = translations[lang];
-
-  const toggleLanguage = () => {
-    const newLang = lang === "ar" ? "en" : "ar";
-    setLang(newLang);
-    document.documentElement.dir = newLang === "ar" ? "rtl" : "ltr";
-    document.documentElement.lang = newLang;
-  };
+  const { lang, toggleLanguage, t } = useLanguage();
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-zinc-200/80">
-      <div className="container mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
+      <div className="container mx-auto px-4 sm:px-8 h-20 flex items-center justify-between gap-4">
         
-        {/* أزرار الإجراءات (زر صور جدارك + زر اللغة) */}
-        <div className="flex items-center gap-2.5">
+        {/* الأزرار اليمنى/اليسرى */}
+        <div className="flex items-center gap-3 shrink-0">
           <Button 
             type="button"
             onClick={onOpenModal} 
@@ -33,18 +24,17 @@ export function Navbar({ onOpenModal }: { onOpenModal?: () => void }) {
             <span>{t.nav.snapWall}</span>
           </Button>
 
-          {/* زر التبديل بين عربي و EN */}
           <button 
             type="button"
             onClick={toggleLanguage}
-            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-slate-100 hover:bg-slate-200 text-zinc-800 transition-colors cursor-pointer border border-zinc-200/80 font-bold text-xs shadow-sm"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-full bg-zinc-100 hover:bg-zinc-200 text-zinc-900 border border-zinc-300 font-bold text-xs cursor-pointer transition-all shadow-sm"
           >
             <Globe className="w-4 h-4 text-[#E52328]" />
             <span>{lang === "ar" ? "EN" : "عربي"}</span>
           </button>
         </div>
 
-        {/* القائمة الرئيسية */}
+        {/* القائمة الوسطى */}
         <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-xs sm:text-sm font-semibold text-zinc-700">
           <Link href="/#hero" className="hover:text-[#E52328] transition-colors">{t.nav.home}</Link>
           <Link href="/#how-it-works" className="hover:text-[#E52328] transition-colors">{t.nav.howItWorks}</Link>
@@ -54,7 +44,7 @@ export function Navbar({ onOpenModal }: { onOpenModal?: () => void }) {
         </nav>
 
         {/* الشعار */}
-        <Link href="/" className="flex items-center">
+        <Link href="/" className="flex items-center shrink-0">
           <Image 
             src="/logo.png" 
             alt="Juleative Art" 
